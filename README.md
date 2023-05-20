@@ -1,3 +1,3 @@
 # Centroid-Supply-Optimization
-Course Work
+Course Work.
 Code, etc. at master branch

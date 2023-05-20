@@ -1,4 +1,5 @@
-from skfuzzy import defuzzify
+import skfuzzy as sk
+
 from skfuzzy import control as ctrl
 
 from .FuzzyRules import FuzzyRules
@@ -6,9 +7,9 @@ from .FuzzyVariables import FuzzyVariables
 
 
 class FuzzyControlSystem:
-    
+
     def __init__(self):
-        
+
         self.fuzzy_rules = FuzzyRules()
         
         self.control_system = ctrl.ControlSystem(self.fuzzy_rules.get_all_rules())
@@ -16,7 +17,8 @@ class FuzzyControlSystem:
         self.simulation = ctrl.ControlSystemSimulation(self.control_system)
         
         self.fuzzy_variables = FuzzyVariables()
-        
+
+
     def compute(self, data_row):
         
         self.simulation.input['Stock Status'] = data_row['p_stock_status']
@@ -27,6 +29,16 @@ class FuzzyControlSystem:
         try:
             self.simulation.compute()
         except Exception as ex:
-            return ex
-        # defuzzify.centroid мб стоит сделать для 3 значений production отдельно?
-        return defuzzify.centroid(self.fuzzy_variables.production.universe, self.simulation.output['Production'])
+            return (str('No Rule'), float(0))
+
+        decimal_part = str(round(self.simulation.output['Production'], 2)).split('.')[1]
+        compute_result = float('0.' + decimal_part)
+
+        if 0 <= compute_result <= 0.25:
+            lingv_ver = 'not'
+        elif 0.26 <= compute_result <= 0.74:
+            lingv_ver = 'minimum'
+        else:
+            lingv_ver = 'maximum'
+
+        return(lingv_ver, compute_result)

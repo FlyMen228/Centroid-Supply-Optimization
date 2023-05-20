@@ -71,8 +71,8 @@ class FuzzyRules:
             self.fuzzy_variables.sale['good'] & 
             self.fuzzy_variables.order['reasonable'], 
             self.fuzzy_variables.production['minimum'])
-    
-    
+
+
     def get_all_rules(self):
         
         return [self.rule1, self.rule18, self.rule35, self.rule65, self.rule38, self.rule59, self.rule97, self.rule82, self.rule92]
